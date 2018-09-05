@@ -17,6 +17,7 @@ var Modelo = function() {
   this.itemGuardado = new Evento(this);
   this.itemAddedToCart = new Evento(this);
   this.cartListLoaded = new Evento(this);
+  this.removedFromCart = new Evento(this);
 };
 
 Modelo.prototype = {
@@ -110,6 +111,12 @@ Modelo.prototype = {
     cartList.push(id);
     this.guardarCart();
     this.itemAddedToCart.notificar(this.generarCartListDropDown())
+  },
+
+  removeFromCart: function(id) {
+    this.cartList = this.cartList.filter(function(item) { return item !== id });
+    this.guardarCart();
+    this.removedFromCart.notificar(this.generarCartListDropDown())
   }
 };
  

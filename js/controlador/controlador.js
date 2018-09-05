@@ -24,4 +24,8 @@ Controlador.prototype = {
   addToCart: function(id) {
     this.modelo.addToCart(id);
   },
+
+  removeFromCart: function(id) {
+    this.modelo.removeFromCart(id);
+  },
 };

@@ -13,6 +13,11 @@ var VistaCart = function(modelo, controlador) {
     contexto.actualizarDropDown(listaCart);
   });
 
+  this.modelo.removedFromCart.suscribir(function(modelo, listaCart) {
+    contexto.actualizarContador(listaCart);
+    contexto.actualizarDropDown(listaCart);
+  });
+
 };
 
 VistaCart.prototype = {
@@ -38,7 +43,7 @@ VistaCart.prototype = {
     var cartList = $(".cart-list");
     cartList.html("");
     listaCart.forEach(function(product) {
-      cartList.append(`<div class="product-widget">
+      cartList.append(`<div class="product-widget" id="${product.id}">
       <div class="product-img">
         <img src="./img/${product.image}" alt="">
       </div>
@@ -49,14 +54,16 @@ VistaCart.prototype = {
       <button class="delete"><i class="fa fa-close"></i></button>
     </div>`);
     })
+
+    this.configuracionDeBotones()
   },
 
   configuracionDeBotones: function(){
-  var contexto = this;
+    var contexto = this;
 
-  $("button.add-to-cart-btn").click(function() {
-    var id = $(this).closest("div.product").attr("id");
-    contexto.controlador.addToCart(id);
-  });
+    $("button.delete").click(function() {
+      var id = $(this).closest("div.product-widget").attr("id");
+      contexto.controlador.removeFromCart(id);
+    });
   },
 }

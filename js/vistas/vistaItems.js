@@ -28,6 +28,11 @@ VistaItems.prototype = {
       var id = $(this).closest("div.product").attr("id");
       contexto.controlador.addToWishlist(id);
     });
+
+    $("button.add-to-cart-btn").click(function() {
+      var id = $(this).closest("div.product").attr("id");
+      contexto.controlador.addToCart(id);
+    });
   },
 
   prenderCorazon: function(productID){

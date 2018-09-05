@@ -10,7 +10,7 @@ Evento.prototype = {
   },
   notificar: function(args) {
     for (var i = 0; i < this.observadores.length; i++) {
-      this.observadores[i](this.sujeto, args);
+      this.observadores[i](this.modelo, args);
     }
   }
 };
