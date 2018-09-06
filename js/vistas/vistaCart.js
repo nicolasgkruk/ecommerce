@@ -27,7 +27,8 @@ VistaCart.prototype = {
   },
 
   actualizarContador: function(listaCart) {
-    var cartDiv = $(".dropdown-toggle")
+   
+    var cartDiv = $(".dropdown-toggle");
 
     var totalAmount = function(){
       var total = 0;
@@ -38,7 +39,10 @@ VistaCart.prototype = {
              subtotal += listaCart[i].precio * listaCart[i].cantidad;
              elemento.innerHTML = "SUBTOTAL: $" + subtotal;
            }
-
+      
+      if (listaCart.length < 1) {
+        elemento.innerHTML = "";
+      } 
       return total;
     }; 
     cartDiv.find("div.qty").html(totalAmount());
