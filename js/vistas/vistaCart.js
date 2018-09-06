@@ -31,9 +31,14 @@ VistaCart.prototype = {
 
     var totalAmount = function(){
       var total = 0;
+      var subtotal = 0;
+      var elemento = document.getElementById("subtotal");
       for (var i = 0; i < listaCart.length; i++) {
              total += listaCart[i].cantidad;
+             subtotal += listaCart[i].precio * listaCart[i].cantidad;
+             elemento.innerHTML = "SUBTOTAL: $" + subtotal;
            }
+
       return total;
     }; 
     cartDiv.find("div.qty").html(totalAmount());
@@ -53,7 +58,7 @@ VistaCart.prototype = {
       </div>
       <button class="delete"><i class="fa fa-close"></i></button>
     </div>`);
-    })
+    });
 
     this.configuracionDeBotones();
   },
