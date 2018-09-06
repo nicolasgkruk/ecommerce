@@ -55,7 +55,7 @@ VistaCart.prototype = {
     </div>`);
     })
 
-    this.configuracionDeBotones()
+    this.configuracionDeBotones();
   },
 
   configuracionDeBotones: function(){
