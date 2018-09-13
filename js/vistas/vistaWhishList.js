@@ -14,6 +14,10 @@ var VistaWishList = function(modelo, controlador) {
   });
   this.modelo.itemGuardado.suscribir(function(modelo, listaWishlist){
     contexto.actualizarContador(listaWishlist);
+  });
+  this.modelo.wishListLoaded.suscribir(function(modelo, listaWishlist) {
+    contexto.actualizarContador(listaWishlist);
+    // TODO Make it work the same way as before.
   })
 };
 

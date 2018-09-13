@@ -28,4 +28,12 @@ Controlador.prototype = {
   removeFromCart: function(id) {
     this.modelo.removeFromCart(id);
   },
+
+  sendCredentials: function(user, pass) {
+    this.modelo.getCredentials(user, pass);
+  },
+
+  getProductList: function() {
+    this.modelo.sendProductList();
+  }
 };

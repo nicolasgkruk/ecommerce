@@ -2,14 +2,10 @@
  * Modelo
  */
 var Modelo = function() {
-  this.productList = [{id: "product1", image: "product01.png", name:"MacBook Pro", oldPrice: 35000, newPrice: 30000},
-  {id: "product2", image: "product05.png", name:"Auriculares Sony", oldPrice: 2650, newPrice: 2500},
-  {id: "product3", image: "product04.png", name:"Tablet Xperia", oldPrice: 6000 , newPrice: 5600 },
-  {id: "product4", image: "product06.png", name:"Notebook MSI", oldPrice: 9000, newPrice: 8500},
-  {id: "product5", image: "product07.png", name:"Smartphone Samsung", oldPrice: 8000, newPrice: 7500},
-  {id: "product6", image: "product09.png", name:"Rekam", oldPrice: 990, newPrice: 980},]
+  this.productList = []
   this.whishList = [];  
   this.cartList = [];
+  this.token = "";
 
   //inicializacion de eventos
   this.itemAgregadoAWhishList = new Evento(this);
@@ -18,6 +14,9 @@ var Modelo = function() {
   this.itemAddedToCart = new Evento(this);
   this.cartListLoaded = new Evento(this);
   this.removedFromCart = new Evento(this);
+  this.wishListLoaded = new Evento(this);
+  this.loginDone = new Evento(this);
+  this.listOfProductsLoaded = new Evento(this);
 };
 
 Modelo.prototype = {
@@ -117,6 +116,56 @@ Modelo.prototype = {
     this.cartList = this.cartList.filter(function(item) { return item !== id });
     this.guardarCart();
     this.removedFromCart.notificar(this.generarCartListDropDown())
+  },
+
+  getCredentials: function(user, pass) {
+    var context = this;
+    $.ajax({
+      method: "POST",
+      url: "http://ecommerce.casu-net.com.ar/api/users/authenticate",
+      data: { email: user, password: pass }
+    })
+    .done(function( body ) {
+      console.log(body.token);
+      // changeToken and save to local storage
+      context.token = body.token;
+      localStorage.setItem('token', context.token);
+      // retrieveWishList
+      $.ajax({
+        method: "GET",
+        url: "http://ecommerce.casu-net.com.ar/api/products",
+        headers: { "x-access-token": context.token }
+      })
+      .done(function(body) {
+        console.log(body)
+        context.whishList = body;
+        //TODO this.wishListLoaded.notificat(wishList);
+      });
+      // retrieveCartList
+      $.ajax({
+        method: "GET",
+        url: "http://ecommerce.casu-net.com.ar/api/cart",
+        headers: { "x-access-token": context.token }
+      })
+      .done(function(body) {
+        console.log(body);
+        context.cartList = body;
+        //TODO this.cartListLoaded.notificar(productList);
+      });
+    //TODO this.loginDone.notificar(username);
+    });
+  },
+
+  sendProductList: function() {
+    $.ajax({
+      method: "GET",
+      url: "http://ecommerce.casu-net.com.ar/api/products",
+      headers: { "x-access-token": "TOKEN" }
+    })
+    .done(function( msg ) {
+      console.log(msg)
+      //TODO this.listOfProductsLoaded.notificar(productList);
+    });
   }
 };
  

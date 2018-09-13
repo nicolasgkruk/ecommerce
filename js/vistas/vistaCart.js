@@ -18,12 +18,25 @@ var VistaCart = function(modelo, controlador) {
     contexto.actualizarDropDown(listaCart);
   });
 
+  this.modelo.loginDone.suscribir(function(modelo, user) {
+    // TODO fire welcome message, hide login form.
+  });
+
+  this.modelo.listOfProductsLoaded.suscribir(function(modelo, listOfProducts) {
+    // TODO update templating of products.
+  })
+
 };
 
 VistaCart.prototype = {
   inicializar: function() {
-    this.controlador.obtenerCartList()
+    var that = this;
+    this.controlador.obtenerCartList();
     this.configuracionDeBotones();
+    $(document).ready(function() {
+      that.controlador.getProductList();
+    }) 
+
   },
 
   actualizarContador: function(listaCart) {
@@ -74,18 +87,6 @@ VistaCart.prototype = {
     this.configuracionDeBotones();
   },
 
-     /*  cartList.append(`<div class="product-widget" id="${product.id}">
-      <div class="product-img">
-        <img src="./img/${product.image}" alt="">
-      </div>
-      <div class="product-body">
-        <h3 class="product-name"><a href="#">${product.name}</a></h3>
-        <h4 class="product-price"><span class="qty">${product.cantidad}x</span>$ ${product.precio}</h4>
-      </div>
-      <button class="delete"><i class="fa fa-close"></i></button>
-    </div>`);
-    }); */
-
   configuracionDeBotones: function(){
 
    /*  var borrar = document.getElementById("borrate");
@@ -101,5 +102,17 @@ VistaCart.prototype = {
       var id = $(this).closest("div.product-widget").attr("id");
       contexto.controlador.removeFromCart(id);
     });
+
+    $("button#login").click(function() {
+      var user = $(this).closest("div.container").find("input[name='username']").val();
+      var pass = $(this).closest("div.container").find("input[name='password']").val();
+      contexto.controlador.sendCredentials(user, pass);
+
+      // TODO Input Validation and relocate to click span inside login button on header.
+    });
+
+    // TODO Register
+
   },
+
 }
