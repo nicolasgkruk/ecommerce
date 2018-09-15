@@ -1,5 +1,18 @@
 /*
  * Modelo
+ * 
+ * TODO:
+ * 
+ * todo ecommerce:
+-register new user.
+-sign in, save token in a variable. From there: fetch cart list and wish list.
+-when document ready: send list of available products, update in view.
+-loader icon?
+-remove icon from cart: deletes item.
+-wishlist functionality (add, remove)
+-add to cart.
+
+FIXME: test;
  */
 var Modelo = function() {
   this.productList = []
@@ -106,6 +119,7 @@ Modelo.prototype = {
   },
 
   addToCart: function(id) {
+    // TODO: everything.
     var cartList = this.cartList;
     cartList.push(id);
     this.guardarCart();
@@ -113,6 +127,7 @@ Modelo.prototype = {
   },
 
   removeFromCart: function(id) {
+    // TODO:
     this.cartList = this.cartList.filter(function(item) { return item !== id });
     this.guardarCart();
     this.removedFromCart.notificar(this.generarCartListDropDown())
@@ -139,7 +154,7 @@ Modelo.prototype = {
       .done(function(body) {
         console.log(body)
         context.whishList = body;
-        //TODO this.wishListLoaded.notificat(wishList);
+        //TODO: this.wishListLoaded.notificar(wishList);
       });
       // retrieveCartList
       $.ajax({
@@ -150,9 +165,9 @@ Modelo.prototype = {
       .done(function(body) {
         console.log(body);
         context.cartList = body;
-        //TODO this.cartListLoaded.notificar(productList);
+        //TODO: this.cartListLoaded.notificar(productList);
       });
-    //TODO this.loginDone.notificar(username);
+    //TODO: this.loginDone.notificar(username);
     });
   },
 
@@ -162,11 +177,10 @@ Modelo.prototype = {
       url: "http://ecommerce.casu-net.com.ar/api/products",
       headers: { "x-access-token": "TOKEN" }
     })
-    .done(function( msg ) {
-      console.log(msg)
+    .done(function(body) {
+      console.log(body)
       //TODO this.listOfProductsLoaded.notificar(productList);
     });
   }
 };
- 
 
