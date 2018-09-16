@@ -22,40 +22,29 @@ var VistaCart = function(modelo, controlador) {
     // TODO fire welcome message, hide login form.
   });
 
-  this.modelo.listOfProductsLoaded.suscribir(function(modelo, listOfProducts) {
-    // TODO update templating of products.
-  })
-
 };
 
 VistaCart.prototype = {
   inicializar: function() {
-    var that = this;
     this.configuracionDeBotones();
-    $(document).ready(function() {
-      that.controlador.getProductList();
-    }) 
-
   },
 
   actualizarContador: function(listaCart) {
-   
     var cartDiv = $(".dropdown-toggle");
-
     var totalAmount = function(){
-      var total = 0;
+      var cantidadTotal = 0;
       var subtotal = 0;
       var elemento = document.getElementById("subtotal");
       for (var i = 0; i < listaCart.length; i++) {
-             total += listaCart[i].cantidad;
-             subtotal += listaCart[i].precio * listaCart[i].cantidad;
-             elemento.innerHTML = "SUBTOTAL: $" + subtotal;
-           }
+        cantidadTotal += listaCart[i].qty;
+        subtotal += listaCart[i].product.price * listaCart[i].qty;
+        elemento.innerHTML = "SUBTOTAL: $" + subtotal;
+        }
       
       if (listaCart.length < 1) {
         elemento.innerHTML = "";
       } 
-      return total;
+      return cantidadTotal;
     }; 
     cartDiv.find("div.qty").html(totalAmount());
   },
@@ -63,22 +52,22 @@ VistaCart.prototype = {
   actualizarDropDown: function(listaCart) {
     var cartList = $(".cart-list");
     cartList.html("");
-    listaCart.forEach(function(product) {
+    var $template = $('div.product-widget');
+    listaCart.forEach(function(e) {
       //desde aca llamamos al Template
-      var $template = $('div.product-widget');
       // clonamos el Template
       var $clone = $template.clone();
       // sacamos la clase hide
       $clone.removeClass('hide');
       // le insertamos el texto del producto al template clonado
-      $clone.attr("id", product.id);
-      $clone.find("h3.product-name a").text(product.name);
-      $clone.find("div.product-img img").attr("src", './img/' + product.image);
+      $clone.attr("id", e.product._id);
+      $clone.find("h3.product-name a").text(e.product.name);
+      $clone.find("div.product-img img").attr("src", e.product.pictureUrl);
       //$clone.find("h4.product-price").text(`x ${product.cantidad} - ${product.precio} `);
       var html = $clone.find("h4.product-price").html()
-      html = html.replace("{productName}", product.name)
-      html = html.replace("{qty}", product.cantidad)
-      html = html.replace("{price}", product.precio)
+      html = html.replace("{productName}", e.product.name)
+      html = html.replace("{qty}", e.qty)
+      html = html.replace("{price}", e.product.price)
       $clone.find("h4.product-price").html(html)
       // agregamos el template a cart-list
       cartList.append($clone);
@@ -107,10 +96,10 @@ VistaCart.prototype = {
       var pass = $(this).closest("div.container").find("input[name='password']").val();
       contexto.controlador.sendCredentials(user, pass);
 
-      // TODO Input Validation and relocate to click span inside login button on header.
+      // TODO: Input Validation and relocate to click span inside login button on header.
     });
 
-    // TODO Register
+    // TODO: Register
 
   },
 

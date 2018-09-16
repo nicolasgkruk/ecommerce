@@ -28,7 +28,7 @@ VistaItems.prototype = {
   inicializar: function() {
     this.configuracionDeBotones();
     controlador.getProductList();
-    //controlador.retrieveUserSession();
+    controlador.retrieveUserSession();
   },
 
   productsLoaded: function(products) {
@@ -77,7 +77,7 @@ VistaItems.prototype = {
 
   prenderTodos: function(listaWishlist) {
     for(var i = 0; i < listaWishlist.length; i++ ) {
-      this.prenderCorazon(listaWishlist[i]);  
+      this.prenderCorazon(listaWishlist[i]._id);  
     }
   },
 
