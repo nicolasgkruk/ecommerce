@@ -8,7 +8,6 @@
 -ocultar wish list y cart hasta que se loguee?
 -registrar cart y wishlist 
 -sign in, remove sign in form after sign in.
--add, remove from cart.
 -errors, exceptions from all ajax calls.
 -loader icon?
 -remove icon from cart: deletes item.
@@ -120,7 +119,24 @@ Modelo.prototype = {
           console.log(body)
           context.itemAddedToCart.notificar(body);
         })
+  },
 
+  removeFromCart: function(productID) {
+    var context = this;
+    var route = "http://ecommerce.casu-net.com.ar/api/cart/";
+    var fullRoute = route.concat(productID);
+      $.ajax({
+        method: "DELETE",
+        url: fullRoute,
+        headers: {  "x-access-token": context.token },
+        data: {
+          productId: productID,
+          }
+        })
+        .done(function(body) {
+          console.log(body)
+          context.removedFromCart.notificar(body);
+        })
   },
 
   getCredentials: function(user, pass) {
@@ -154,9 +170,10 @@ Modelo.prototype = {
 
   loadSession: function() {
     this.token = localStorage.getItem('token');
+    if (this.token) {
     this.retrieveWishList();
     this.retrieveCartList();
-
+    }
   }
 };
 
