@@ -16,37 +16,42 @@ var VistaItems = function(modelo, controlador) {
   });
 
   this.modelo.listOfProductsLoaded.suscribir(function(modelo, listOfProducts) {
-    contexto.productsLoaded(products);
+    contexto.productsLoaded(listOfProducts);
   });
+
+  this.modelo.wishListLoaded.suscribir(function(modelo, listaWishlist) {
+    contexto.prenderTodos(listaWishlist);
+  })
 };
 
 VistaItems.prototype = {
   inicializar: function() {
     this.configuracionDeBotones();
+    controlador.getProductList();
+    //controlador.retrieveUserSession();
   },
 
   productsLoaded: function(products) {
-    var cartList = $(".cart-list");
-    cartList.html("");
-    listaCart.forEach(function(product) {
+    var $storeDiv = $("#store");
+    $storeDiv.html("");
+    var $template = $('div.product-template');
+    //$storeDiv.append($("div")).addClass("row");
+    products.forEach(function(product) {
       //desde aca llamamos al Template
-      var $template = $('div.product-widget');
       // clonamos el Template
       var $clone = $template.clone();
       // sacamos la clase hide
       $clone.removeClass('hide');
       // le insertamos el texto del producto al template clonado
-      $clone.attr("id", product.id);
+      $clone.attr("id", product._id);
       $clone.find("h3.product-name a").text(product.name);
-      $clone.find("div.product-img img").attr("src", './img/' + product.image);
-      //$clone.find("h4.product-price").text(`x ${product.cantidad} - ${product.precio} `);
-      var html = $clone.find("h4.product-price").html()
-      html = html.replace("{productName}", product.name)
-      html = html.replace("{qty}", product.cantidad)
-      html = html.replace("{price}", product.precio)
+      $clone.find("div.product-img img").attr("src", product.pictureUrl);
+      var html = $clone.find("h4.product-price").html();
+      html = html.replace("{price}", product.price);
+      html = html.replace("{oldPrice}", product.oldPrice)
       $clone.find("h4.product-price").html(html)
       // agregamos el template a cart-list
-      cartList.append($clone);
+      $storeDiv.append($clone);
     });
     this.configuracionDeBotones();
   },
@@ -55,12 +60,12 @@ VistaItems.prototype = {
     var contexto = this;
 
     $("button.add-to-wishlist").click(function() {
-      var id = $(this).closest("div.product").attr("id");
+      var id = $(this).closest("div.product-template").attr("id");
       contexto.controlador.addToWishlist(id);
     });
 
     $("button.add-to-cart-btn").click(function() {
-      var id = $(this).closest("div.product").attr("id");
+      var id = $(this).closest("div.product-template").attr("id");
       contexto.controlador.addToCart(id);
     });
   },

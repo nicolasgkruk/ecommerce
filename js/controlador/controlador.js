@@ -6,15 +6,13 @@ var Controlador = function(modelo) {
 };
 
 Controlador.prototype = {
+
   addToWishlist: function(productID) {
-    if (!this.modelo.whishList.includes(productID)){
-      this.modelo.addToWishlist(productID);
-    } else {
-      this.modelo.removeFromWishlist(productID);
-    }
+    this.modelo.addToOrRemoveFromWishList(productID);
   },
+
   obtenerWishlist: function() {
-  	this.modelo.recibe();
+  	this.modelo.sendWishList();
   },
 
   obtenerCartList: function() {
@@ -35,5 +33,9 @@ Controlador.prototype = {
 
   getProductList: function() {
     this.modelo.sendProductList();
+  },
+
+  retrieveUserSession: function() {
+    this.modelo.loadSession();
   }
 };

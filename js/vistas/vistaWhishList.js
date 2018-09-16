@@ -17,14 +17,12 @@ var VistaWishList = function(modelo, controlador) {
   });
   this.modelo.wishListLoaded.suscribir(function(modelo, listaWishlist) {
     contexto.actualizarContador(listaWishlist);
-    // TODO Make it work the same way as before.
   })
 };
 
 
 VistaWishList.prototype = {
   inicializar: function() {
-    this.controlador.obtenerWishlist()
   },
 
   incrementarContador: function(){

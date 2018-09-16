@@ -2,24 +2,18 @@
  * Modelo
  * 
  * TODO:
- * 
- * todo ecommerce:
--register new user.
--sign in, save token in a variable. From there: fetch cart list and wish list.
--when document ready: send list of available products, update in view.
+-retrieve token when page reloads
+-register new user. update view accordingly.
+-ocultar wish list y cart hasta que se loguee?
+-registrar cart y wishlist 
+-sign in, remove sign in form after sign in.
+-add, remove from cart.
+-errors, exceptions from all ajax calls.
 -loader icon?
 -remove icon from cart: deletes item.
--wishlist functionality (add, remove)
--add to cart.
-
-FIXME: test;
  */
 var Modelo = function() {
-  this.productList = []
-  this.whishList = [];  
-  this.cartList = [];
   this.token = "";
-
   //inicializacion de eventos
   this.itemAgregadoAWhishList = new Evento(this);
   this.itemEliminadoDeWhishList = new Evento(this);
@@ -33,44 +27,73 @@ var Modelo = function() {
 };
 
 Modelo.prototype = {
-  addToWishlist: function(productID) {
-    this.whishList.push(productID);
-    this.itemAgregadoAWhishList.notificar(productID);
-    this.guardar();
+
+  addToOrRemoveFromWishList: function(productID) {
+    var context = this;
+    // getwishlist
+    $.ajax({
+      method: "GET",
+      url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+      headers: { "x-access-token": context.token }
+    })
+    .done(function(body) {
+      var wishList = body;
+      var filteredWishList = wishList.find(function(element) {
+      return element._id === productID
+      });
+      if (filteredWishList == undefined || !filteredWishList) {
+        $.ajax({
+          method: "POST",
+          url: "http://ecommerce.casu-net.com.ar/api/whishlist",
+          headers: {  "x-access-token": context.token },
+          data: {
+            productId: productID,
+          }
+        })
+        .done(function(body) {
+          console.log(body)
+          context.itemAgregadoAWhishList.notificar(productID);
+        })
+      }
+      else if (filteredWishList._id === productID) {
+        var deleteUrl = "http://ecommerce.casu-net.com.ar/api/whishlist/"
+        var fullDeleteUrl = deleteUrl.concat(productID);
+        $.ajax({
+          method: "DELETE",
+          url: fullDeleteUrl,
+          headers: {  "x-access-token": context.token },
+          data: {
+            productId: productID,
+          }
+        })
+        .done(function(body) {
+          console.log(body)
+          context.itemEliminadoDeWhishList.notificar(productID);
+        })
+        .error(function(body) {
+          var response = body;
+          console.log(response.statusText);
+        })
+      }
+    });
+    // if product in getwishlist: remove
+    // else if product not in wishlist: addToWishlist
   },
 
-  removeFromWishlist: function(productID){
-    var index = this.whishList.indexOf(productID);
-    if (index > -1) {
-      this.whishList.splice(index, 1);
-      this.itemEliminadoDeWhishList.notificar(productID);
-      this.guardar();
-    }
-  },
   //se guardan en el local storage
-  guardar: function(){
-      var wishlist = this.whishList;
-      var str = JSON.stringify(wishlist);
-      localStorage.setItem('wishlist', str);
-  },
+  sendWishList: function(){     
 
-  guardarCart: function() {
-    var cartList = this.cartList;
-    var str = JSON.stringify(cartList);
-    localStorage.setItem("cartList", str);
-  },
-  // recibe
-   recibe: function(){     
-      var strItem = localStorage.getItem('wishlist');
+
+      /* var strItem = localStorage.getItem('wishlist');
       this.whishList = JSON.parse(strItem);
       if(this.whishList === null) {
         this.whishList = [];
       } else {
         this.itemGuardado.notificar(this.whishList);        
-      }
+      } */
   },
 
-  generarCartListDropDown: function() {
+  /* generarCartListDropDown: function() {
     var cartList = this.cartList;
     var productList = this.productList;
     var cartListDropDown = [];
@@ -106,32 +129,32 @@ Modelo.prototype = {
     }
 
     return cartListDropDown;
-  },
+  }, */
 
 
-  enviarCartList: function() {
+ /*  enviarCartList: function() {
     var strItem = localStorage.getItem("cartList");
     this.cartList = JSON.parse(strItem);
     if(this.cartList === null) {
       this.cartList = [];
     }
     this.cartListLoaded.notificar(this.generarCartListDropDown());
-  },
+  }, */
 
-  addToCart: function(id) {
+  /* addToCart: function(id) {
     // TODO: everything.
     var cartList = this.cartList;
     cartList.push(id);
     this.guardarCart();
     this.itemAddedToCart.notificar(this.generarCartListDropDown())
-  },
+  }, */
 
-  removeFromCart: function(id) {
+  /* removeFromCart: function(id) {
     // TODO:
     this.cartList = this.cartList.filter(function(item) { return item !== id });
     this.guardarCart();
     this.removedFromCart.notificar(this.generarCartListDropDown())
-  },
+  }, */
 
   getCredentials: function(user, pass) {
     var context = this;
@@ -148,13 +171,12 @@ Modelo.prototype = {
       // retrieveWishList
       $.ajax({
         method: "GET",
-        url: "http://ecommerce.casu-net.com.ar/api/products",
+        url: "http://ecommerce.casu-net.com.ar/api/whishlist",
         headers: { "x-access-token": context.token }
       })
       .done(function(body) {
-        console.log(body)
         context.whishList = body;
-        //TODO: this.wishListLoaded.notificar(wishList);
+        context.wishListLoaded.notificar(context.whishList);
       });
       // retrieveCartList
       $.ajax({
@@ -163,7 +185,7 @@ Modelo.prototype = {
         headers: { "x-access-token": context.token }
       })
       .done(function(body) {
-        console.log(body);
+        console.log("Cart is currently" + body.length);
         context.cartList = body;
         //TODO: this.cartListLoaded.notificar(productList);
       });
@@ -172,15 +194,18 @@ Modelo.prototype = {
   },
 
   sendProductList: function() {
+    var contexto = this;
     $.ajax({
       method: "GET",
       url: "http://ecommerce.casu-net.com.ar/api/products",
-      headers: { "x-access-token": "TOKEN" }
     })
     .done(function(body) {
-      console.log(body)
-      //TODO this.listOfProductsLoaded.notificar(productList);
+      contexto.listOfProductsLoaded.notificar(body);
     });
+  },
+
+  loadSession: function() {
+    this.token = localStorage.getItem('token');
   }
 };
 

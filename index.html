@@ -65,6 +65,8 @@
 									
 										</a>
 								</div>
+								<!-- Register/Log-in -->
+
 									<!-- /Wishlist -->
 
 
@@ -197,34 +199,36 @@
 					<!-- STORE -->
 					<div id="store" class="col-md-12">
 						<!-- store products -->
-						<div class="row">
+					<div class="row">
 
-							<!-- product -->
-							<div class="col-md-4 col-xs-6 hide">
-								<div class="product" id="">
-									<div class="product-img">
-										<img src={pictureUrl} alt="">
-									</div>
-									<div class="product-body">
-										<h3 class="product-name"><a href="#">{name}</a></h3>
-										<h4 class="product-price">${price}<del class="product-old-price">${oldPrice}</del></h4>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
+							
 							<div class="clearfix visible-lg visible-md"></div>
 					
 						</div>
 						<!-- /store products -->
 					</div>
 					<!-- /STORE -->
+					<!-- <div class="row"></div>
+					<div class="clearfix visible-lg visible-md"></div> -->
+					<!-- product template -->
+					<div class="col-md-4 col-xs-6 product-template hide" id="">
+						<div class="product">
+							<div class="product-img">
+								<img src={pictureUrl} alt="">
+							</div>
+							<div class="product-body">
+								<h3 class="product-name"><a href="#">{name}</a></h3>
+								<h4 class="product-price">${price}<del class="product-old-price">${oldPrice}</del></h4>
+								<div class="product-btns">
+									<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+								</div>
+							</div>
+							<div class="add-to-cart">
+								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+							</div>
+						</div>
+					</div>
+					<!-- /product -->
 				</div>
 				<!-- /row -->
 			</div>

@@ -31,7 +31,6 @@ var VistaCart = function(modelo, controlador) {
 VistaCart.prototype = {
   inicializar: function() {
     var that = this;
-    this.controlador.obtenerCartList();
     this.configuracionDeBotones();
     $(document).ready(function() {
       that.controlador.getProductList();
