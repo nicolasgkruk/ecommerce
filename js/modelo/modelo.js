@@ -5,8 +5,6 @@
 -if no one is logged and no token is saved: alert when adding cart or wish list (send person to login)
 -cerrar sesión (borra token y recarga vista)
 -register new user. update view accordingly.
--ocultar wish list y cart hasta que se loguee?
--registrar cart y wishlist 
 -sign in, remove sign in form after sign in.
 -errors, exceptions from all ajax calls.
 -loader icon?
